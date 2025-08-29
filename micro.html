@@ -1,0 +1,2880 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Micro  </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ff0000;
+            --secondary-color: #282828;
+            --text-color: #f1f1f1;
+            --background-color: #0f0f0f;
+            --hover-color: #4d4d4d;
+            --accent-color: #3ea6ff;
+            --light-bg: #f9f9f9;
+            --light-text: #0f0f0f;
+            --light-secondary: #e5e5e5;
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --danger-color: #f44336;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        body.light-mode {
+            background-color: var(--light-bg);
+            color: var(--light-text);
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* شريط التنقل */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            background-color: var(--secondary-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: background-color 0.3s;
+        }
+        
+        body.light-mode .navbar {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-right: 1rem;
+        }
+        
+        body.light-mode .menu-toggle {
+            color: var(--light-text);
+        }
+        
+        .search-bar {
+            display: flex;
+            flex: 0 1 40%;
+        }
+        
+        .search-bar input {
+            padding: 0.5rem 1rem;
+            border: 1px solid #333;
+            background-color: #121212;
+            color: white;
+            width: 100%;
+            border-radius: 2px 0 0 2px;
+            transition: all 0.3s;
+        }
+        
+        body.light-mode .search-bar input {
+            background-color: white;
+            color: var(--light-text);
+            border: 1px solid #ccc;
+        }
+        
+        .search-bar button {
+            padding: 0.5rem 1.2rem;
+            background-color: #333;
+            border: none;
+            color: white;
+            border-radius: 0 2px 2px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        body.light-mode .search-bar button {
+            background-color: #f8f8f8;
+            color: var(--light-text);
+            border: 1px solid #ccc;
+            border-left: none;
+        }
+        
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #cc0000;
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(62, 166, 255, 0.1);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 1rem;
+        }
+        
+        .language-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 1rem;
+        }
+        
+        body.light-mode .language-toggle {
+            color: var(--light-text);
+        }
+        
+        /* المحتوى الرئيسي */
+        .main-content {
+            display: flex;
+            flex: 1;
+        }
+        
+        /* الشريط الجانبي */
+        .sidebar {
+            width: 240px;
+            background-color: var(--secondary-color);
+            padding: 1rem 0;
+            overflow-y: auto;
+            transition: all 0.3s;
+        }
+        
+        body.light-mode .sidebar {
+            background-color: white;
+            border-left: 1px solid #e5e5e5;
+        }
+        
+        .sidebar.collapsed {
+            width: 70px;
+        }
+        
+        .sidebar.collapsed .sidebar-item span {
+            display: none;
+        }
+        
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            color: var(--text-color);
+        }
+        
+        body.light-mode .sidebar-item {
+            color: var(--light-text);
+        }
+        
+        .sidebar-item:hover {
+            background-color: var(--hover-color);
+        }
+        
+        body.light-mode .sidebar-item:hover {
+            background-color: var(--light-secondary);
+        }
+        
+        .sidebar-item i {
+            margin-left: 1rem;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .sidebar-item.active {
+            background-color: var(--hover-color);
+            border-right: 3px solid var(--primary-color);
+        }
+        
+        body.light-mode .sidebar-item.active {
+            background-color: var(--light-secondary);
+        }
+        
+        /* منطقة الفيديوهات */
+        .content {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            transition: margin-right 0.3s;
+        }
+        
+        .banner {
+            background: linear-gradient(90deg, #ff0000, #ff5e00);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .banner-content h2 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .categories {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+        
+        .category-btn {
+            padding: 0.5rem 1rem;
+            background-color: #272727;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background-color 0.2s;
+        }
+        
+        body.light-mode .category-btn {
+            background-color: #e5e5e5;
+            color: var(--light-text);
+        }
+        
+        .category-btn.active {
+            background-color: white;
+            color: black;
+        }
+        
+        body.light-mode .category-btn.active {
+            background-color: var(--light-text);
+            color: white;
+        }
+        
+        .category-btn:hover {
+            background-color: #3d3d3d;
+        }
+        
+        body.light-mode .category-btn:hover {
+            background-color: #d5d5d5;
+        }
+        
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .video-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .video-card:hover {
+            transform: scale(1.03);
+        }
+        
+        .thumbnail {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* نسبة 16:9 */
+            background-color: #333;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .thumbnail img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .video-duration {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+        
+        .video-info {
+            display: flex;
+            margin-top: 0.8rem;
+        }
+        
+        .channel-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #666;
+            margin-left: 0.8rem;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .video-details h3 {
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            color: var(--text-color);
+        }
+        
+        body.light-mode .video-details h3 {
+            color: var(--light-text);
+        }
+        
+        .video-meta {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        body.light-mode .video-meta {
+            color: #606060;
+        }
+        
+        /* مشغل الفيديو */
+        .video-player {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .player-container {
+            width: 80%;
+            max-width: 1000px;
+            position: relative;
+        }
+        
+        .close-player {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.5);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .video-container {
+            width: 100%;
+            position: relative;
+            padding-bottom: 56.25%;
+            background-color: black;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .video-container video {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+        }
+        
+        .player-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .control-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin: 0 0.5rem;
+        }
+        
+        .progress-bar {
+            flex-grow: 1;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            margin: 0 1rem;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .progress {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+            width: 30%;
+        }
+        
+        /* تفاعلات الفيديو */
+        .video-actions {
+            display: flex;
+            justify-content: space-around;
+            padding: 1rem 0;
+            border-bottom: 1px solid #333;
+        }
+        
+        body.light-mode .video-actions {
+            border-bottom: 1px solid #e5e5e5;
+        }
+        
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: color 0.2s;
+            color: var(--text-color);
+        }
+        
+        body.light-mode .action-btn {
+            color: var(--light-text);
+        }
+        
+        .action-btn:hover {
+            color: var(--accent-color);
+        }
+        
+        .action-btn.active {
+            color: var(--accent-color);
+        }
+        
+        /* التعليقات */
+        .comments-section {
+            margin-top: 1.5rem;
+        }
+        
+        .comment {
+            display: flex;
+            margin-bottom: 1.5rem;
+        }
+        
+        .comment-content {
+            flex: 1;
+        }
+        
+        .comment-content h4 {
+            margin-bottom: 0.3rem;
+            color: var(--text-color);
+        }
+        
+        body.light-mode .comment-content h4 {
+            color: var(--light-text);
+        }
+        
+        .comment-content h4 span {
+            color: #aaa;
+            font-weight: normal;
+            font-size: 0.9rem;
+        }
+        
+        body.light-mode .comment-content h4 span {
+            color: #606060;
+        }
+        
+        .comment-content p {
+            color: var(--text-color);
+        }
+        
+        body.light-mode .comment-content p {
+            color: var(--light-text);
+        }
+        
+        /* نموذج الاشتراك */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: var(--secondary-color);
+            padding: 2rem;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            transition: background-color 0.3s;
+        }
+        
+        body.light-mode .modal-content {
+            background-color: white;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: none;
+            border: none;
+            color: #aaa;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 0.8rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: var(--text-color);
+        }
+        
+        body.light-mode .auth-tab {
+            color: var(--light-text);
+        }
+        
+        .auth-tab.active {
+            border-bottom: 2px solid var(--accent-color);
+            color: var(--accent-color);
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #aaa;
+        }
+        
+        body.light-mode .form-group label {
+            color: #606060;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #333;
+            background-color: #121212;
+            color: white;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        body.light-mode .form-group input, 
+        body.light-mode .form-group select, 
+        body.light-mode .form-group textarea {
+            background-color: white;
+            color: var(--light-text);
+            border: 1px solid #ccc;
+        }
+        
+        .forgot-password {
+            display: block;
+            text-align: left;
+            color: var(--accent-color);
+            text-decoration: none;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        /* صفحات أخرى */
+        .page {
+            display: none;
+            padding: 2rem;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .upload-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .upload-preview {
+            width: 100%;
+            height: 200px;
+            background-color: #333;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+        }
+        
+        /* صفحة القناة */
+        .channel-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+        }
+        
+        body.light-mode .channel-header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .channel-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #666;
+            margin-left: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .channel-avatar input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .channel-banner {
+            width: 100%;
+            height: 200px;
+            background-color: #333;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .channel-banner input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .channel-info h1 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .channel-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 0.5rem;
+            color: #aaa;
+        }
+        
+        body.light-mode .channel-stats {
+            color: #606060;
+        }
+        
+        .channel-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        /* Creator Studio */
+        .analytics-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .analytics-card {
+            background-color: var(--secondary-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        body.light-mode .analytics-card {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .analytics-card h3 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+        
+        .analytics-card p {
+            color: #aaa;
+        }
+        
+        body.light-mode .analytics-card p {
+            color: #606060;
+        }
+        
+        /* إدارة الفيديوهات */
+        .video-management {
+            margin-top: 2rem;
+        }
+        
+        .video-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .video-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+        }
+        
+        body.light-mode .video-item {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .video-item-thumbnail {
+            width: 160px;
+            height: 90px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-left: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .video-item-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .video-item-info {
+            flex: 1;
+        }
+        
+        .video-item-info h3 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .video-item-meta {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        body.light-mode .video-item-meta {
+            color: #606060;
+        }
+        
+        .video-item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        /* التكيف مع الشاشات الصغيرة */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 60px;
+                height: calc(100vh - 60px);
+                z-index: 999;
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .search-bar {
+                flex: 0 1 60%;
+            }
+            
+            .video-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .banner {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .player-container {
+                width: 95%;
+            }
+            
+            .channel-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .channel-avatar {
+                margin-left: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .analytics-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .video-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .video-item-thumbnail {
+                width: 100%;
+                height: auto;
+                margin-left: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .video-item-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        /* إشعارات */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 1rem;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 4px;
+            display: none;
+            z-index: 1000;
+            max-width: 300px;
+        }
+        
+        .notification.error {
+            background-color: var(--danger-color);
+        }
+        
+        .notification.warning {
+            background-color: var(--warning-color);
+        }
+        
+        /* عناصر واجهة إضافية */
+        .tab-container {
+            margin-bottom: 1.5rem;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #333;
+            margin-bottom: 1rem;
+        }
+        
+        body.light-mode .tabs {
+            border-bottom: 1px solid #e5e5e5;
+        }
+        
+        .tab {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .tab.active {
+            border-bottom: 2px solid var(--accent-color);
+            color: var(--accent-color);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .card {
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        body.light-mode .card {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .card h3 {
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+        
+        .badge-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .badge-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .badge-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .badge-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        /* عناصر تحميل */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid var(--accent-color);
+            animation: spin 1s linear infinite;
+        }
+        
+        body.light-mode .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top: 4px solid var(--accent-color);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* عناصر تفاعلية */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin-left: 1rem;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- شريط التنقل -->
+        <nav class="navbar">
+            <button class="menu-toggle" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="logo" id="logo">
+                <span>Micro</span>
+            </div>
+            
+            <div class="search-bar">
+                <input type="text" placeholder="ابحث في Micro..." id="search-input">
+                <button id="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+            
+            <div class="user-actions">
+                <button class="btn btn-secondary" id="upload-btn"><i class="fas fa-upload"></i> رفع فيديو</button>
+                <button class="btn btn-primary" id="signin-btn"><i class="fas fa-user"></i> تسجيل الدخول</button>
+                <button class="language-toggle" id="language-toggle">
+                    <i class="fas fa-globe"></i>
+                </button>
+                <button class="theme-toggle" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+        
+        <!-- المحتوى الرئيسي -->
+        <div class="main-content">
+            <!-- الشريط الجانبي -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-item active" data-page="home">
+                    <i class="fas fa-home"></i>
+                    <span>الصفحة الرئيسية</span>
+                </div>
+                <div class="sidebar-item" data-page="trending">
+                    <i class="fas fa-fire"></i>
+                    <span>الأكثر شيوعاً</span>
+                </div>
+                <div class="sidebar-item" data-page="subscriptions">
+                    <i class="fas fa-play-circle"></i>
+                    <span>الاشتراكات</span>
+                </div>
+                <div class="sidebar-item" data-page="my-channel">
+                    <i class="fas fa-user-circle"></i>
+                    <span>قناتي</span>
+                </div>
+                <div class="sidebar-item" data-page="creator-studio">
+                    <i class="fas fa-tv"></i>
+                    <span>استوديو المنشئ</span>
+                </div>
+                <div class="sidebar-item" data-page="history">
+                    <i class="fas fa-history"></i>
+                    <span>التاريخ</span>
+                </div>
+                <div class="sidebar-item" data-page="liked">
+                    <i class="fas fa-thumbs-up"></i>
+                    <span>مقاطع أعجبتني</span>
+                </div>
+                <hr style="border: none; border-top: 1px solid #333; margin: 0.5rem 0;">
+                <div class="sidebar-item" data-page="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>الإعدادات</span>
+                </div>
+                <div class="sidebar-item" data-page="help">
+                    <i class="fas fa-question-circle"></i>
+                    <span>المساعدة</span>
+                </div>
+            </aside>
+            
+            <!-- منطقة الفيديوهات - الصفحة الرئيسية -->
+            <main class="content page active" id="home-page">
+                <div class="banner">
+                    <div class="banner-content">
+                        <h2>مرحباً بك في Micro</h2>
+                        <p>منصةالفيديو الرائدة</p>
+                    </div>
+                    <button class="btn btn-primary" id="explore-btn">استكشف الآن</button>
+                </div>
+                
+                <h2>الفيديوهات المقترحة</h2>
+                <div class="categories">
+                    <button class="category-btn active" data-category="all">الكل</button>
+                    <button class="category-btn" data-category="music">موسيقى</button>
+                    <button class="category-btn" data-category="gaming">ألعاب</button>
+                    <button class="category-btn" data-category="programming">برمجة</button>
+                    <button class="category-btn" data-category="education">تعليم</button>
+                </div>
+                
+                <div class="video-grid" id="video-grid">
+                    <!-- سيتم ملؤها ديناميكياً عند رفع الفيديوهات -->
+                    <div class="empty-state">
+                        <i class="fas fa-video" style="font-size: 3rem; margin-bottom: 1rem; color: #aaa;"></i>
+                        <h3>لا توجد فيديوهات حتى الآن</h3>
+                        <p>Micro من يرفع فيديو على المنصة!</p>
+                        <button class="btn btn-primary" id="first-upload-btn">رفع فيديو</button>
+                    </div>
+                </div>
+            </main>
+
+            <!-- صفحة رفع الفيديو -->
+            <main class="content page" id="upload-page">
+                <h2>رفع فيديو جديد</h2>
+                <div class="upload-form">
+                    <div class="upload-preview" id="upload-preview">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 3rem;"></i>
+                        <p>انقر لتحميل فيديو أو اسحب وأفلت الملف هنا</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="video-title">عنوان الفيديو</label>
+                        <input type="text" id="video-title" placeholder="أدخل عنوان جذاب للفيديو">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="video-description">وصف الفيديو</label>
+                        <textarea id="video-description" placeholder="أدخل وصفاً تفصيلياً للفيديو" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="video-thumbnail">صورة المصغرة</label>
+                        <input type="file" id="video-thumbnail" accept="image/*">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="video-file">ملف الفيديو</label>
+                        <input type="file" id="video-file" accept="video/*">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="video-category">الفئة</label>
+                        <select id="video-category">
+                            <option value="music">موسيقى</option>
+                            <option value="gaming">ألعاب</option>
+                            <option value="programming">برمجة</option>
+                            <option value="education">تعليم</option>
+                            <option value="entertainment">ترفيه</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="video-tags">الكلمات المفتاحية (مفصولة بفواصل)</label>
+                        <input type="text" id="video-tags" placeholder="كلمة, كلمتين, ثلاث كلمات">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="video-visibility">الخصوصية</label>
+                        <select id="video-visibility">
+                            <option value="public">عام</option>
+                            <option value="unlisted">غير مدرج</option>
+                            <option value="private">خاص</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn btn-primary" id="submit-upload">رفع الفيديو</button>
+                </div>
+            </main>
+
+            <!-- صفحة قناتي -->
+            <main class="content page" id="my-channel-page">
+                <div class="channel-banner" id="channel-banner">
+                    <i class="fas fa-camera" style="font-size: 2rem;"></i>
+                    <p>انقر لتغيير صورة الغلاف</p>
+                    <input type="file" id="banner-upload" accept="image/*">
+                </div>
+                
+                <div class="channel-header">
+                    <div class="channel-avatar" id="channel-avatar">
+                        <i class="fas fa-user"></i>
+                        <input type="file" id="avatar-upload" accept="image/*">
+                    </div>
+                    <div class="channel-info">
+                        <h1 id="channel-name">قناتي</h1>
+                        <p id="channel-handle">@username</p>
+                        <div class="channel-stats">
+                            <span id="channel-subs">0 مشترك</span>
+                            <span id="channel-videos">0 فيديو</span>
+                            <span id="channel-views">0 مشاهدة</span>
+                        </div>
+                        <div class="channel-actions">
+                            <button class="btn btn-secondary" id="customize-channel">
+                                <i class="fas fa-paint-brush"></i> تخصيص القناة
+                            </button>
+                            <button class="btn btn-primary" id="manage-videos">
+                                <i class="fas fa-film"></i> إدارة الفيديوهات
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-container">
+                    <div class="tabs">
+                        <div class="tab active" data-tab="videos">الفيديوهات</div>
+                        <div class="tab" data-tab="about">حول القناة</div>
+                    </div>
+                    
+                    <div class="tab-content active" id="videos-tab">
+                        <div class="video-grid" id="channel-video-grid">
+                            <!-- سيتم ملؤها ديناميكياً -->
+                            <div class="empty-state">
+                                <i class="fas fa-video" style="font-size: 3rem; margin-bottom: 1rem; color: #aaa;"></i>
+                                <h3>لا توجد فيديوهات في قناتك بعد</h3>
+                                <p>ابدأ برفع أول فيديو لك!</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="about-tab">
+                        <div class="card">
+                            <h3>حول القناة</h3>
+                            <p id="channel-description">لم تقم بإضافة وصف للقناة بعد.</p>
+                            <button class="btn btn-secondary" id="edit-channel-description">
+                                <i class="fas fa-edit"></i> تعديل الوصف
+                            </button>
+                        </div>
+                        
+                        <div class="card">
+                            <h3>تفاصيل القناة</h3>
+                            <p><strong>تاريخ الانضمام:</strong> <span id="join-date">-</span></p>
+                            <p><strong>البلد:</strong> <span id="channel-country">غير محدد</span></p>
+                            <button class="btn btn-secondary" id="edit-channel-details">
+                                <i class="fas fa-edit"></i> تعديل التفاصيل
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- صفحة إدارة الفيديوهات -->
+            <main class="content page" id="manage-videos-page">
+                <h2>إدارة الفيديوهات</h2>
+                <p>هنا يمكنك إدارة الفيديوهات التي رفعتها على قناتك</p>
+                
+                <div class="video-management">
+                    <div class="video-list" id="video-list">
+                        <!-- سيتم ملؤها ديناميكياً -->
+                        <div class="empty-state">
+                            <i class="fas fa-video" style="font-size: 3rem; margin-bottom: 1rem; color: #aaa;"></i>
+                            <h3>لا توجد فيديوهات لإدارتها بعد</h3>
+                            <p>ابدأ برفع أول فيديو لك!</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- صفحات أخرى -->
+            <main class="content page" id="trending-page">
+                <h2>الفيديوهات الأكثر شيوعاً</h2>
+                <div class="video-grid" id="trending-grid">
+                    <!-- سيتم ملؤها ديناميكياً -->
+                    <div class="empty-state">
+                        <i class="fas fa-fire" style="font-size: 3rem; margin-bottom: 1rem; color: #aaa;"></i>
+                        <h3>لا توجد فيديوهات شائعة بعد</h3>
+                        <p>كن أول من يصنع محتوى viral على المنصة!</p>
+                    </div>
+                </div>
+            </main>
+
+            <main class="content page" id="creator-studio-page">
+                <h2>استوديو المنشئ</h2>
+                
+                <div class="analytics-cards">
+                    <div class="analytics-card">
+                        <h3 id="total-views">0</h3>
+                        <p>إجمالي المشاهدات</p>
+                    </div>
+                    <div class="analytics-card">
+                        <h3 id="subscribers-count">0</h3>
+                        <p>المشتركين</p>
+                    </div>
+                    <div class="analytics-card">
+                        <h3 id="videos-count">0</h3>
+                        <p>الفيديوهات</p>
+                    </div>
+                    <div class="analytics-card">
+                        <h3 id="watch-time">0</h3>
+                        <p>دقائق المشاهدة</p>
+                    </div>
+                </div>
+                
+                <div class="tab-container">
+                    <div class="tabs">
+                        <div class="tab active" data-tab="analytics">التحليلات</div>
+                        <div class="tab" data-tab="content">المحتوى</div>
+                        <div class="tab" data-tab="comments">التعليقات</div>
+                    </div>
+                    
+                    <div class="tab-content active" id="analytics-tab">
+                        <div class="card">
+                            <h3>أداء الفيديوهات</h3>
+                            <p>هنا يمكنك رؤية إحصائيات أداء فيديوهاتك.</p>
+                            <div class="empty-state">
+                                <i class="fas fa-chart-line" style="font-size: 3rem; margin-bottom: 1rem; color: #aaa;"></i>
+                                <h3>لا توجد بيانات تحليلية بعد</h3>
+                                <p>بمجرد أن تبدأ في رفع الفيديوهات، ستظهر التحليلات هنا</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="content-tab">
+                        <div class="card">
+                            <h3>إدارة المحتوى</h3>
+                            <p>هنا يمكنك إدارة فيديوهاتك وقوائم التشغيل.</p>
+                            <button class="btn btn-primary" id="go-to-manage-videos">
+                                <i class="fas fa-film"></i> الانتقال إلى إدارة الفيديوهات
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="comments-tab">
+                        <div class="card">
+                            <h3>إدارة التعليقات</h3>
+                            <p>هنا يمكنك إدارة التعليقات على فيديوهاتك.</p>
+                            <div class="empty-state">
+                                <i class="fas fa-comments" style="font-size: 3rem; margin-bottom: 1rem; color: #aaa;"></i>
+                                <h3>لا توجد تعليقات لإدارتها بعد</h3>
+                                <p>بمجرد أن يحصل فيديو لك على تعليقات، ستظهر هنا</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- صفحات إضافية -->
+            <main class="content page" id="subscriptions-page">
+                <h2>قنواتك المشترك فيها</h2>
+                <div class="empty-state">
+                    <i class="fas fa-play-circle" style="font-size: 3rem; margin-bottom: 1rem; color: #aaa;"></i>
+                    <h3>لست مشتركاً في أي قنوات بعد</h3>
+                    <p>اشترك في القنوات التي تعجبك لمشاهدة أحدث فيديوهاتهم هنا</p>
+                </div>
+            </main>
+
+            <main class="content page" id="history-page">
+                <h2>سجل المشاهدة</h2>
+                <div class="empty-state">
+                    <i class="fas fa-history" style="font-size: 3rem; margin-bottom: 1rem; color: #aaa;"></i>
+                    <h3>سجل المشاهدة فارغ</h3>
+                    <p>الفيديوهات التي تشاهدها ستظهر هنا</p>
+                </div>
+            </main>
+
+            <main class="content page" id="liked-page">
+                <h2>الفيديوهات التي أعجبتك</h2>
+                <div class="empty-state">
+                    <i class="fas fa-thumbs-up" style="font-size: 3rem; margin-bottom: 1rem; color: #aaa;"></i>
+                    <h3>لم تعجب بأي فيديو بعد</h3>
+                    <p>اضغط على زر الإعجاب في أي فيديو لتظهر هنا</p>
+                </div>
+            </main>
+
+            <main class="content page" id="settings-page">
+                <h2>الإعدادات</h2>
+                <div class="card">
+                    <h3>الإعدادات العامة</h3>
+                    <div class="toggle-label">
+                        <span>الوضع الليلي</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="dark-mode-toggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-label">
+                        <span>التشغيل التلقائي</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="autoplay-toggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-label">
+                        <span>جودة تلقائية</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="auto-quality-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>إعدادات الخصوصية</h3>
+                    <div class="toggle-label">
+                        <span>حفظ سجل المشاهدة</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="history-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-label">
+                        <span>البحث الآمن</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="safe-search-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </main>
+
+            <main class="content page" id="help-page">
+                <h2>مركز المساعدة</h2>
+                <div class="card">
+                    <h3>كيفية استخدام Micro</h3>
+                    <p>مرحباً بك في Micro! هنا بعض النصائح للبدء:</p>
+                    <ul>
+                        <li>انقر على "رفع فيديو" لبدء مشاركة محتواك</li>
+                        <li>استخدم شريط البحث للعثور على الفيديوهات التي تهمك</li>
+                        <li>اشترك في القنوات التي تعجبك لمتابعة أحدث محتواهم</li>
+                        <li>استخدم الأزرار تحت كل فيديو للإعجاب والمشاركة</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3>الأسئلة الشائعة</h3>
+                    <div class="faq-item">
+                        <h4>كيف أرفع فيديو؟</h4>
+                        <p>انقر على زر "رفع فيديو" في الشريط العلوي، ثم اتبع الخطوات لتحميل الفيديو وإضافة التفاصيل.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>كيف أخصص قناتي؟</h4>
+                        <p>اذهب إلى "قناتي" ثم انقر على "تخصيص القناة" لتغيير الصورة والغلاف والإعدادات.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h4>كيف أدير الفيديوهات التي رفعتها؟</h4>
+                        <p>اذهب إلى "قناتي" ثم انقر على "إدارة الفيديوهات" لعرض وتعديل أو حذف الفيديوهات.</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <!-- مشغل الفيديو -->
+    <div class="video-player" id="video-player">
+        <div class="player-container">
+            <div class="close-player" id="close-player">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="video-container">
+                <video controls id="main-video">
+                    <source src="" type="video/mp4">
+                    متصفحك لا يدعم تشغيل الفيديو.
+                </video>
+            </div>
+            
+            <div class="video-info">
+                <h2 id="player-title">عنوان الفيديو</h2>
+                <div class="video-meta">
+                    <span id="player-views">0 مشاهدة</span> • 
+                    <span id="player-date">الآن</span>
+                </div>
+            </div>
+            
+            <div class="video-actions">
+                <div class="action-btn" id="like-btn">
+                    <i class="fas fa-thumbs-up"></i>
+                    <span id="like-count">0</span>
+                </div>
+                <div class="action-btn" id="dislike-btn">
+                    <i class="fas fa-thumbs-down"></i>
+                    <span>غير معجب</span>
+                </div>
+                <div class="action-btn" id="share-btn">
+                    <i class="fas fa-share"></i>
+                    <span>مشاركة</span>
+                </div>
+                <div class="action-btn" id="save-btn">
+                    <i class="fas fa-save"></i>
+                    <span>حفظ</span>
+                </div>
+            </div>
+            
+            <div class="comments-section" id="comments-section">
+                <h3>التعليقات (<span id="comments-count">0</span>)</h3>
+                <div id="comments-container">
+                    <!-- التعليقات سيتم إضافتها ديناميكياً -->
+                    <div class="empty-state">
+                        <i class="fas fa-comments" style="font-size: 2rem; margin-bottom: 1rem; color: #aaa;"></i>
+                        <p>لا توجد تعليقات بعد. كن أول من يعلق!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- نافذة تسجيل الدخول -->
+    <div class="auth-modal" id="auth-modal">
+        <div class="modal-content">
+            <button class="close-modal" id="close-auth-modal">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2>تسجيل الدخول إلى Micro</h2>
+            <p>استمتع بتجربة شخصية على منصتنا</p>
+            
+            <div class="auth-tabs">
+                <div class="auth-tab active" data-tab="login">تسجيل الدخول</div>
+                <div class="auth-tab" data-tab="register">إنشاء حساب</div>
+            </div>
+            
+            <div class="auth-form active" id="login-form">
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني</label>
+                    <input type="email" id="email" placeholder="أدخل بريدك الإلكتروني">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">كلمة المرور</label>
+                    <input type="password" id="password" placeholder="أدخل كلمة المرور">
+                </div>
+                
+                <a href="#" class="forgot-password">نسيت كلمة المرور؟</a>
+                
+                <button class="btn btn-primary" style="width: 100%;" id="login-btn">تسجيل الدخول</button>
+                
+                <div style="text-align: center; margin: 1.5rem 0; color: #aaa;">أو</div>
+                
+                <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                    <button class="btn btn-secondary" style="width: 100%;" id="google-login">
+                        <i class="fab fa-google"></i> تسجيل الدخول باستخدام Google
+                    </button>
+                    <button class="btn btn-secondary" style="width: 100%;" id="facebook-login">
+                        <i class="fab fa-facebook"></i> تسجيل الدخول باستخدام Facebook
+                    </button>
+                </div>
+            </div>
+            
+            <div class="auth-form" id="register-form">
+                <div class="form-group">
+                    <label for="name">الاسم الكامل</label>
+                    <input type="text" id="name" placeholder="أدخل اسمك الكامل">
+                </div>
+                
+                <div class="form-group">
+                    <label for="new-email">البريد الإلكتروني</label>
+                    <input type="email" id="new-email" placeholder="أدخل بريدك الإلكتروني">
+                </div>
+                
+                <div class="form-group">
+                    <label for="new-password">كلمة المرور</label>
+                    <input type="password" id="new-password" placeholder="أنشئ كلمة مرور قوية">
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm-password">تأكيد كلمة المرور</label>
+                    <input type="password" id="confirm-password" placeholder="أعد إدخال كلمة المرور">
+                </div>
+                
+                <div class="form-group">
+                    <label for="channel-name">اسم القناة</label>
+                    <input type="text" id="channel-name-input" placeholder="اسم قناتك على Micro">
+                </div>
+                
+                <button class="btn btn-primary" style="width: 100%;" id="register-btn">إنشاء حساب</button>
+            </div>
+            
+            <p style="text-align: center; color: #aaa; font-size: 0.9rem; margin-top: 1.5rem;">
+                بالاستمرار، أنت توافق على <a href="#" style="color: var(--accent-color);">شروط الخدمة</a> 
+                و<a href="#" style="color: var(--accent-color);">سياسة الخصوصية</a> الخاصة بنا
+            </p>
+        </div>
+    </div>
+
+    <!-- إشعار -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // حالة التطبيق
+        let currentUser = null;
+        let currentVideo = null;
+        let likedVideos = JSON.parse(localStorage.getItem('likedVideos')) || [];
+        let savedVideos = JSON.parse(localStorage.getItem('savedVideos')) || [];
+        let watchHistory = JSON.parse(localStorage.getItem('watchHistory')) || [];
+        let userVideos = JSON.parse(localStorage.getItem('userVideos')) || [];
+        let userChannel = JSON.parse(localStorage.getItem('userChannel')) || null;
+        let isEnglish = false;
+        let sidebarCollapsed = false;
+
+        // نصوص للغة العربية والإنجليزية
+        const translations = {
+            ar: {
+                home: "الصفحة الرئيسية",
+                trending: "الأكثر شيوعاً",
+                subscriptions: "الاشتراكات",
+                myChannel: "قناتي",
+                studio: "استوديو المنشئ",
+                history: "التاريخ",
+                liked: "مقاطع أعجبتني",
+                settings: "الإعدادات",
+                help: "المساعدة",
+                searchPlaceholder: "ابحث في Micro...",
+                login: "تسجيل الدخول",
+                signup: "إنشاء حساب",
+                upload: "رفع فيديو",
+                views: "مشاهدة",
+                subscribers: "مشترك",
+                videos: "فيديوهات",
+                watchTime: "دقائق المشاهدة",
+                suggestedVideos: "الفيديوهات المقترحة",
+                noVideos: "لا توجد فيديوهات حتى الآن",
+                beFirst: "كن أول من يرفع فيديو على المنصة!",
+                manageVideos: "إدارة الفيديوهات",
+                channelCustomize: "تخصيص القناة",
+                aboutChannel: "حول القناة",
+                joinDate: "تاريخ الانضمام",
+                country: "البلد",
+                editDescription: "تعديل الوصف",
+                editDetails: "تعديل التفاصيل",
+                videoManagement: "إدارة الفيديوهات",
+                noVideosManage: "لا توجد فيديوهات لإدارتها بعد",
+                analytics: "التحليلات",
+                content: "المحتوى",
+                comments: "التعليقات",
+                noAnalytics: "لا توجد بيانات تحليلية بعد",
+                goToManage: "الانتقال إلى إدارة الفيديوهات",
+                noComments: "لا توجد تعليقات لإدارتها بعد",
+                noSubscriptions: "لست مشتركاً في أي قنوات بعد",
+                emptyHistory: "سجل المشاهدة فارغ",
+                noLikedVideos: "لم تعجب بأي فيديو بعد",
+                settingsTitle: "الإعدادات",
+                generalSettings: "الإعدادات العامة",
+                darkMode: "الوضع الليلي",
+                autoplay: "التشغيل التلقائي",
+                autoQuality: "جودة تلقائية",
+                privacySettings: "إعدادات الخصوصية",
+                saveHistory: "حفظ سجل المشاهدة",
+                safeSearch: "البحث الآمن",
+                helpTitle: "مركز المساعدة",
+                howToUse: "كيفية استخدام Micro",
+                faq: "الأسئلة الشائعة",
+                welcomeMicro: "مرحباً بك في Micro",
+                arabicPlatform: "منصة الفيديو العربية الرائدة",
+                exploreNow: "استكشف الآن"
+            },
+            en: {
+                home: "Home",
+                trending: "Trending",
+                subscriptions: "Subscriptions",
+                myChannel: "My Channel",
+                studio: "Creator Studio",
+                history: "History",
+                liked: "Liked Videos",
+                settings: "Settings",
+                help: "Help",
+                searchPlaceholder: "Search in Micro...",
+                login: "Sign In",
+                signup: "Sign Up",
+                upload: "Upload Video",
+                views: "views",
+                subscribers: "subscribers",
+                videos: "videos",
+                watchTime: "watch time (min)",
+                suggestedVideos: "Suggested Videos",
+                noVideos: "No videos yet",
+                beFirst: "Be the first to upload a video on the platform!",
+                manageVideos: "Manage Videos",
+                channelCustomize: "Customize Channel",
+                aboutChannel: "About Channel",
+                joinDate: "Join Date",
+                country: "Country",
+                editDescription: "Edit Description",
+                editDetails: "Edit Details",
+                videoManagement: "Video Management",
+                noVideosManage: "No videos to manage yet",
+                analytics: "Analytics",
+                content: "Content",
+                comments: "Comments",
+                noAnalytics: "No analytics data yet",
+                goToManage: "Go to Video Management",
+                noComments: "No comments to manage yet",
+                noSubscriptions: "Not subscribed to any channels yet",
+                emptyHistory: "Watch history is empty",
+                noLikedVideos: "Haven't liked any videos yet",
+                settingsTitle: "Settings",
+                generalSettings: "General Settings",
+                darkMode: "Dark Mode",
+                autoplay: "Autoplay",
+                autoQuality: "Auto Quality",
+                privacySettings: "Privacy Settings",
+                saveHistory: "Save Watch History",
+                safeSearch: "Safe Search",
+                helpTitle: "Help Center",
+                howToUse: "How to use Micro",
+                faq: "Frequently Asked Questions",
+                welcomeMicro: "Welcome to Micro",
+                arabicPlatform: "The leading Arabic video platform",
+                exploreNow: "Explore Now"
+            }
+        };
+
+        // تهيئة التطبيق
+        document.addEventListener('DOMContentLoaded', function() {
+            initEventListeners();
+            checkLoginStatus();
+            loadUserVideos();
+            updateChannelInfo();
+            updateUIForLanguage();
+            checkSidebarState();
+        });
+
+        // تحميل الفيديوهات التي رفعها المستخدم
+        function loadUserVideos() {
+            const savedVideos = JSON.parse(localStorage.getItem('userVideos')) || [];
+            userVideos = savedVideos;
+        }
+
+        // تحديث معلومات القناة
+        function updateChannelInfo() {
+            if (!userChannel) return;
+            
+            document.getElementById('channel-name').textContent = userChannel.name;
+            document.getElementById('channel-handle').textContent = `@${userChannel.handle}`;
+            document.getElementById('channel-subs').textContent = `${userChannel.subscribers} ${isEnglish ? translations.en.subscribers : translations.ar.subscribers}`;
+            document.getElementById('channel-videos').textContent = `${userVideos.length} ${isEnglish ? translations.en.videos : translations.ar.videos}`;
+            
+            // حساب إجمالي المشاهدات
+            const totalViews = userVideos.reduce((total, video) => total + parseInt(video.views), 0);
+            document.getElementById('channel-views').textContent = `${totalViews} ${isEnglish ? translations.en.views : translations.ar.views}`;
+            
+            // تحديث إحصائيات استوديو المنشئ
+            document.getElementById('total-views').textContent = totalViews;
+            document.getElementById('subscribers-count').textContent = userChannel.subscribers;
+            document.getElementById('videos-count').textContent = userVideos.length;
+            
+            // حساب وقت المشاهدة (افتراضي: 5 دقائق لكل مشاهدة)
+            const watchTime = totalViews * 5;
+            document.getElementById('watch-time').textContent = watchTime;
+            
+            // تحديث صورة القناة إذا كانت موجودة
+            if (userChannel.avatar) {
+                document.getElementById('channel-avatar').innerHTML = `<img src="${userChannel.avatar}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"><input type="file" id="avatar-upload" accept="image/*">`;
+            }
+            
+            // تحديث غلاف القناة إذا كان موجوداً
+            if (userChannel.banner) {
+                document.getElementById('channel-banner').innerHTML = `<img src="${userChannel.banner}" style="width: 100%; height: 100%; object-fit: cover;"><input type="file" id="banner-upload" accept="image/*">`;
+            }
+        }
+
+        // تحديث واجهة المستخدم للغة المحددة
+        function updateUIForLanguage() {
+            const t = isEnglish ? translations.en : translations.ar;
+            
+            // تحديث عناصر القائمة
+            document.querySelectorAll('.sidebar-item').forEach((item, index) => {
+                const items = ['home', 'trending', 'subscriptions', 'myChannel', 'studio', 'history', 'liked', 'settings', 'help'];
+                if (index < items.length) {
+                    item.querySelector('span').textContent = t[items[index]];
+                }
+            });
+            
+            // تحديث عناصر أخرى
+            document.getElementById('search-input').placeholder = t.searchPlaceholder;
+            document.getElementById('signin-btn').innerHTML = `<i class="fas fa-user"></i> ${t.login}`;
+            document.getElementById('upload-btn').innerHTML = `<i class="fas fa-upload"></i> ${t.upload}`;
+            document.getElementById('manage-videos').innerHTML = `<i class="fas fa-film"></i> ${t.manageVideos}`;
+            document.getElementById('customize-channel').innerHTML = `<i class="fas fa-paint-brush"></i> ${t.channelCustomize}`;
+            
+            // تحديث عناوين الصفحات
+            document.querySelectorAll('h2').forEach((heading, index) => {
+                const headings = ['my-channel-page', 'manage-videos-page', 'creator-studio-page', 'settings-page', 'help-page'];
+                const texts = ['myChannel', 'videoManagement', 'studio', 'settingsTitle', 'helpTitle'];
+                
+                const pageId = heading.closest('.page')?.id;
+                const headingIndex = headings.indexOf(pageId);
+                
+                if (headingIndex !== -1) {
+                    heading.textContent = t[texts[headingIndex]];
+                }
+            });
+            
+            // تحديث اتجاه الصفحة
+            document.dir = isEnglish ? 'ltr' : 'rtl';
+            document.lang = isEnglish ? 'en' : 'ar';
+        }
+
+        // التحقق من حالة الشريط الجانبي
+        function checkSidebarState() {
+            const savedState = localStorage.getItem('sidebarCollapsed');
+            if (savedState === 'true') {
+                toggleSidebar();
+            }
+        }
+
+        // تبديل حالة الشريط الجانبي
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+            sidebarCollapsed = !sidebarCollapsed;
+            localStorage.setItem('sidebarCollapsed', sidebarCollapsed);
+        }
+
+        // تهيئة مستمعي الأحداث
+        function initEventListeners() {
+            // إغلاق مشغل الفيديو
+            document.getElementById('close-player').addEventListener('click', closeVideoPlayer);
+            
+            // فتح نافذة تسجيل الدخول
+            document.getElementById('signin-btn').addEventListener('click', openAuthModal);
+            
+            // إغلاق نافذة تسجيل الدخول
+            document.getElementById('close-auth-modal').addEventListener('click', closeAuthModal);
+            
+            // التبديل بين تبويبات تسجيل الدخول وإنشاء حساب
+            document.querySelectorAll('.auth-tab').forEach(tab => {
+                tab.addEventListener('click', () => switchAuthTab(tab.dataset.tab));
+            });
+            
+            // تسجيل الدخول
+            document.getElementById('login-btn').addEventListener('click', login);
+            
+            // إنشاء حساب
+            document.getElementById('register-btn').addEventListener('click', register);
+            
+            // تسجيل الدخول باستخدام Google
+            document.getElementById('google-login').addEventListener('click', () => socialLogin('google'));
+            
+            // تسجيل الدخول باستخدام Facebook
+            document.getElementById('facebook-login').addEventListener('click', () => socialLogin('facebook'));
+            
+            // تصفية الفيديوهات حسب الفئة
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', () => filterVideos(btn.dataset.category));
+            });
+            
+            // الإعجاب بالفيديو
+            document.getElementById('like-btn').addEventListener('click', toggleLike);
+            
+            // حفظ الفيديو
+            document.getElementById('save-btn').addEventListener('click', toggleSave);
+            
+            // مشاركة الفيديو
+            document.getElementById('share-btn').addEventListener('click', shareVideo);
+            
+            // رفع فيديو
+            document.getElementById('upload-btn').addEventListener('click', () => showPage('upload'));
+            document.getElementById('submit-upload').addEventListener('click', uploadVideo);
+            document.getElementById('first-upload-btn').addEventListener('click', () => showPage('upload'));
+            
+            // معاينة صورة المصغرة
+            document.getElementById('video-thumbnail').addEventListener('change', handleThumbnailPreview);
+            
+            // التنقل بين الصفحات
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.addEventListener('click', () => showPage(item.dataset.page));
+            });
+            
+            // الانتقال إلى الصفحة الرئيسية عند النقر على الشعار
+            document.getElementById('logo').addEventListener('click', () => showPage('home'));
+            
+            // تبديل الوضع الليلي/النهاري
+            document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+            
+            // تبديل اللغة
+            document.getElementById('language-toggle').addEventListener('click', toggleLanguage);
+            
+            // إظهار/إخفاء الشريط الجانبي
+            document.getElementById('menu-toggle').addEventListener('click', toggleSidebar);
+            
+            // تبويبات الصفحات
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => switchTab(tab));
+            });
+            
+            // إدارة القناة
+            document.getElementById('customize-channel').addEventListener('click', customizeChannel);
+            document.getElementById('manage-videos').addEventListener('click', () => showPage('manage-videos'));
+            document.getElementById('go-to-manage-videos').addEventListener('click', () => showPage('manage-videos'));
+            document.getElementById('edit-channel-description').addEventListener('click', editChannelDescription);
+            document.getElementById('edit-channel-details').addEventListener('click', editChannelDetails);
+            
+            // تحميل الصور للقناة
+            document.getElementById('avatar-upload').addEventListener('change', handleAvatarUpload);
+            document.getElementById('banner-upload').addEventListener('change', handleBannerUpload);
+            
+            // البحث مع التصحيح التلقائي
+            document.getElementById('search-btn').addEventListener('click', searchVideos);
+            document.getElementById('search-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') searchVideos();
+            });
+            document.getElementById('search-input').addEventListener('input', suggestSearch);
+        }
+
+        // إغلاق مشغل الفيديو
+        function closeVideoPlayer() {
+            document.getElementById('video-player').style.display = 'none';
+            if (document.getElementById('main-video')) {
+                document.getElementById('main-video').pause();
+            }
+            currentVideo = null;
+        }
+
+        // فتح نافذة تسجيل الدخول
+        function openAuthModal() {
+            if (currentUser) {
+                if (confirm(isEnglish ? 'Do you want to sign out?' : 'هل تريد تسجيل الخروج؟')) {
+                    logout();
+                }
+                return;
+            }
+            document.getElementById('auth-modal').style.display = 'flex';
+        }
+
+        // إغلاق نافذة تسجيل الدخول
+        function closeAuthModal() {
+            document.getElementById('auth-modal').style.display = 'none';
+        }
+
+        // التبديل بين تبويبات تسجيل الدخول وإنشاء حساب
+        function switchAuthTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+            
+            document.querySelector(`.auth-tab[data-tab="${tab}"]`).classList.add('active');
+            document.getElementById(`${tab}-form`).classList.add('active');
+        }
+
+        // التحقق من حالة تسجيل الدخول
+        function checkLoginStatus() {
+            const savedUser = localStorage.getItem('currentUser');
+            const savedTheme = localStorage.getItem('theme');
+            const savedChannel = localStorage.getItem('userChannel');
+            const savedLanguage = localStorage.getItem('language');
+            
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                updateUIAfterLogin();
+            }
+            
+            if (savedChannel) {
+                userChannel = JSON.parse(savedChannel);
+            }
+            
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-sun"></i>';
+            }
+            
+            if (savedLanguage === 'en') {
+                isEnglish = true;
+                document.getElementById('language-toggle').innerHTML = '<i class="fas fa-language"></i>';
+            }
+        }
+
+        // تسجيل الدخول
+        function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (!email || !password) {
+                showNotification(isEnglish ? 'Please fill all fields' : 'يرجى ملء جميع الحقول', 'error');
+                return;
+            }
+            
+            // محاكاة عملية تسجيل الدخول
+            currentUser = {
+                email: email,
+                name: email.split('@')[0]
+            };
+            
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            closeAuthModal();
+            showNotification(isEnglish ? 'Signed in successfully' : 'تم تسجيل الدخول بنجاح', 'success');
+            updateUIAfterLogin();
+        }
+
+        // إنشاء حساب
+        function register() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('new-email').value;
+            const password = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const channelName = document.getElementById('channel-name-input').value || name;
+            
+            if (!name || !email || !password || !confirmPassword) {
+                showNotification(isEnglish ? 'Please fill all fields' : 'يرجى ملء جميع الحقول', 'error');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showNotification(isEnglish ? 'Passwords do not match' : 'كلمات المرور غير متطابقة', 'error');
+                return;
+            }
+            
+            // محاكاة عملية إنشاء حساب
+            currentUser = {
+                email: email,
+                name: name
+            };
+            
+            // إنشاء قناة للمستخدم
+            userChannel = {
+                name: channelName,
+                handle: generateHandle(channelName),
+                subscribers: 0,
+                joinDate: new Date().toLocaleDateString(isEnglish ? 'en-US' : 'ar-AR'),
+                description: isEnglish ? "No channel description yet." : "لم يتم إضافة وصف للقناة بعد.",
+                country: isEnglish ? "Not specified" : "غير محدد",
+                avatar: null,
+                banner: null
+            };
+            
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            localStorage.setItem('userChannel', JSON.stringify(userChannel));
+            closeAuthModal();
+            showNotification(isEnglish ? 'Account and channel created successfully' : 'تم إنشاء الحساب والقناة بنجاح', 'success');
+            updateUIAfterLogin();
+            updateChannelInfo();
+        }
+
+        // توليد معرف للقناة
+        function generateHandle(name) {
+            return name.replace(/\s+/g, '').toLowerCase() + Math.floor(Math.random() * 1000);
+        }
+
+        // تسجيل الدخول عبر وسائل التواصل الاجتماعي
+        function socialLogin(provider) {
+            // محاكاة تسجيل الدخول الاجتماعي
+            currentUser = {
+                email: `${provider}@example.com`,
+                name: `${isEnglish ? 'User' : 'مستخدم'} ${provider}`
+            };
+            
+            // إنشاء قناة تلقائية
+            userChannel = {
+                name: isEnglish ? `${provider} Channel` : `قناة ${provider}`,
+                handle: `${provider}${Math.floor(Math.random() * 1000)}`,
+                subscribers: 0,
+                joinDate: new Date().toLocaleDateString(isEnglish ? 'en-US' : 'ar-AR'),
+                description: isEnglish ? `My ${provider} channel` : `قناة ${provider} الخاصة بي`,
+                country: isEnglish ? "Not specified" : "غير محدد",
+                avatar: null,
+                banner: null
+            };
+            
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            localStorage.setItem('userChannel', JSON.stringify(userChannel));
+            closeAuthModal();
+            showNotification(isEnglish ? `Signed in with ${provider} successfully` : `تم التسجيل باستخدام ${provider} بنجاح`, 'success');
+            updateUIAfterLogin();
+            updateChannelInfo();
+        }
+
+        // تسجيل الخروج
+        function logout() {
+            currentUser = null;
+            userChannel = null;
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('userChannel');
+            document.getElementById('signin-btn').innerHTML = `<i class="fas fa-user"></i> ${isEnglish ? translations.en.login : translations.ar.login}`;
+            showNotification(isEnglish ? 'Signed out successfully' : 'تم تسجيل الخروج بنجاح', 'success');
+        }
+
+        // تحديث واجهة المستخدم بعد تسجيل الدخول
+        function updateUIAfterLogin() {
+            document.getElementById('signin-btn').innerHTML = `<i class="fas fa-user"></i> ${currentUser.name}`;
+        }
+
+        // تبديل الوضع الليلي/النهاري
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.getElementById('theme-toggle');
+            
+            body.classList.toggle('light-mode');
+            
+            if (body.classList.contains('light-mode')) {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                localStorage.setItem('theme', 'light');
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // تبديل اللغة
+        function toggleLanguage() {
+            isEnglish = !isEnglish;
+            localStorage.setItem('language', isEnglish ? 'en' : 'ar');
+            updateUIForLanguage();
+            showNotification(isEnglish ? 'Language changed to English' : 'تم تغيير اللغة إلى العربية', 'success');
+        }
+
+        // عرض صفحة معينة
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(`${pageId}-page`).classList.add('active');
+            
+            // تحديث العنصر النشط في الشريط الجانبي
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.page === pageId) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // إذا كانت صفحة القناة، قم بتحميل فيديوهات القناة
+            if (pageId === 'my-channel') {
+                renderChannelVideos();
+            }
+            
+            // إذا كانت صفحة إدارة الفيديوهات، قم بتحميلها
+            if (pageId === 'manage-videos') {
+                renderManageVideos();
+            }
+        }
+
+        // عرض فيديوهات القناة
+        function renderChannelVideos() {
+            const channelGrid = document.getElementById('channel-video-grid');
+            channelGrid.innerHTML = '';
+            
+            if (userVideos.length === 0) {
+                channelGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-video" style="font-size: 3rem; margin-bottom: 1rem; color: #aaa;"></i>
+                        <h3>${isEnglish ? translations.en.noVideos : translations.ar.noVideos}</h3>
+                        <p>${isEnglish ? translations.en.beFirst : translations.ar.beFirst}</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            userVideos.forEach(video => {
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card';
+                videoCard.setAttribute('data-video-id', video.id);
+                
+                videoCard.innerHTML = `
+                    <div class="thumbnail">
+                        <img src="${video.thumbnail}" alt="${video.title}">
+                        <div class="video-duration">${video.duration}</div>
+                    </div>
+                    <div class="video-info">
+                        <div class="channel-icon">${video.channel.charAt(0)}</div>
+                        <div class="video-details">
+                            <h3>${video.title}</h3>
+                            <div class="video-meta">
+                                <span>${video.channel}</span>
+                                <span>• ${video.views} ${isEnglish ? translations.en.views : translations.ar.views} • ${video.date}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                videoCard.addEventListener('click', () => playVideo(video));
+                channelGrid.appendChild(videoCard);
+            });
+        }
+
+        // عرض إدارة الفيديوهات
+        function renderManageVideos() {
+            const videoList = document.getElementById('video-list');
+            videoList.innerHTML = '';
+            
+            if (userVideos.length === 0) {
+                videoList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-video" style="font-size: 3rem; margin-bottom: 1rem; color: #aaa;"></i>
+                        <h3>${isEnglish ? translations.en.noVideosManage : translations.ar.noVideosManage}</h3>
+                    </div>
+                `;
+                return;
+            }
+            
+            userVideos.forEach(video => {
+                const videoItem = document.createElement('div');
+                videoItem.className = 'video-item';
+                
+                videoItem.innerHTML = `
+                    <div class="video-item-thumbnail">
+                        <img src="${video.thumbnail}" alt="${video.title}">
+                    </div>
+                    <div class="video-item-info">
+                        <h3>${video.title}</h3>
+                        <div class="video-item-meta">
+                            <span>${video.views} ${isEnglish ? translations.en.views : translations.ar.views} • ${video.date}</span>
+                        </div>
+                    </div>
+                    <div class="video-item-actions">
+                        <button class="btn btn-secondary btn-sm edit-video" data-id="${video.id}">
+                            <i class="fas fa-edit"></i> ${isEnglish ? 'Edit' : 'تعديل'}
+                        </button>
+                        <button class="btn btn-danger btn-sm delete-video" data-id="${video.id}">
+                            <i class="fas fa-trash"></i> ${isEnglish ? 'Delete' : 'حذف'}
+                        </button>
+                    </div>
+                `;
+                
+                videoItem.querySelector('.edit-video').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    editVideo(video.id);
+                });
+                
+                videoItem.querySelector('.delete-video').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteVideo(video.id);
+                });
+                
+                videoList.appendChild(videoItem);
+            });
+        }
+
+        // التبديل بين التبويبات
+        function switchTab(tab) {
+            const tabContainer = tab.closest('.tab-container');
+            tabContainer.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            tabContainer.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            tab.classList.add('active');
+            document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
+        }
+
+        // تخصيص القناة
+        function customizeChannel() {
+            // في تطبيق حقيقي، هنا سيتم فتح نافذة تخصيص القناة
+            showNotification(isEnglish ? 'Channel customization opened' : 'تم فتح تخصيص القناة', 'info');
+        }
+
+        // تعديل وصف القناة
+        function editChannelDescription() {
+            const newDescription = prompt(isEnglish ? 'Enter new channel description:' : 'أدخل الوصف الجديد للقناة:', userChannel.description);
+            if (newDescription !== null) {
+                userChannel.description = newDescription;
+                localStorage.setItem('userChannel', JSON.stringify(userChannel));
+                document.getElementById('channel-description').textContent = newDescription;
+                showNotification(isEnglish ? 'Channel description updated' : 'تم تحديث وصف القناة', 'success');
+            }
+        }
+
+        // تعديل تفاصيل القناة
+        function editChannelDetails() {
+            const newCountry = prompt(isEnglish ? 'Enter country:' : 'أدخل البلد:', userChannel.country);
+            if (newCountry !== null) {
+                userChannel.country = newCountry;
+                localStorage.setItem('userChannel', JSON.stringify(userChannel));
+                document.getElementById('channel-country').textContent = newCountry;
+                showNotification(isEnglish ? 'Channel details updated' : 'تم تحديث تفاصيل القناة', 'success');
+            }
+        }
+
+        // تحميل صورة الملف الشخصي
+        function handleAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                userChannel.avatar = e.target.result;
+                localStorage.setItem('userChannel', JSON.stringify(userChannel));
+                document.getElementById('channel-avatar').innerHTML = `<img src="${e.target.result}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;"><input type="file" id="avatar-upload" accept="image/*">`;
+                document.getElementById('avatar-upload').addEventListener('change', handleAvatarUpload);
+                showNotification(isEnglish ? 'Profile picture updated' : 'تم تحديث صورة الملف الشخصي', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // تحميل صورة الغلاف
+        function handleBannerUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                userChannel.banner = e.target.result;
+                localStorage.setItem('userChannel', JSON.stringify(userChannel));
+                document.getElementById('channel-banner').innerHTML = `<img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover;"><input type="file" id="banner-upload" accept="image/*">`;
+                document.getElementById('banner-upload').addEventListener('change', handleBannerUpload);
+                showNotification(isEnglish ? 'Banner updated' : 'تم تحديث صورة الغلاف', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // اقتراحات البحث
+        function suggestSearch() {
+            // في تطبيق حقيقي، هنا سيتم جلب الاقتراحات من الخادم
+            // هذه مجرد محاكاة بسيطة
+            const query = document.getElementById('search-input').value.toLowerCase();
+            if (query.length < 2) return;
+            
+            // محاكاة الاقتراحات
+            const suggestions = ['برمجة', 'ألعاب', 'موسيقى', 'تعليم', 'رياضة'];
+            const filtered = suggestions.filter(s => s.includes(query));
+            
+            // في تطبيق حقيقي، هنا سيتم عرض الاقتراحات في قائمة منسدلة
+        }
+
+        // بحث الفيديوهات
+        function searchVideos() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            if (!query) return;
+            
+            // دمج فيديوهات النظام مع فيديوهات المستخدم
+            const allVideos = [...userVideos];
+            
+            // محاكاة البحث مع التصحيح التلقائي
+            const correctedQuery = correctSpelling(query);
+            const filteredVideos = allVideos.filter(video => 
+                video.title.toLowerCase().includes(correctedQuery) || 
+                video.channel.toLowerCase().includes(correctedQuery) ||
+                video.category.toLowerCase().includes(correctedQuery) ||
+                (video.tags && video.tags.some(tag => tag.toLowerCase().includes(correctedQuery)))
+            );
+            
+            const videoGrid = document.getElementById('video-grid');
+            videoGrid.innerHTML = '';
+            
+            if (filteredVideos.length === 0) {
+                videoGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; color: #aaa;"></i>
+                        <h3>${isEnglish ? 'No results found' : 'لم يتم العثور على نتائج'}</h3>
+                        <p>${isEnglish ? 'Try different keywords' : 'جرب كلمات مفتاحية مختلفة'}</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredVideos.forEach(video => {
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card';
+                videoCard.setAttribute('data-video-id', video.id);
+                
+                videoCard.innerHTML = `
+                    <div class="thumbnail">
+                        <img src="${video.thumbnail}" alt="${video.title}">
+                        <div class="video-duration">${video.duration}</div>
+                    </div>
+                    <div class="video-info">
+                        <div class="channel-icon">${video.channel.charAt(0)}</div>
+                        <div class
+						                        <div class="video-details">
+                            <h3>${video.title}</h3>
+                            <div class="video-meta">
+                                <span>${video.channel}</span>
+                                <span>• ${video.views} ${isEnglish ? translations.en.views : translations.ar.views} • ${video.date}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                videoCard.addEventListener('click', () => playVideo(video));
+                videoGrid.appendChild(videoCard);
+            });
+        }
+
+        // تصحيح الأخطاء الإملائية في البحث (محاكاة بسيطة)
+        function correctSpelling(query) {
+            const corrections = {
+                'برمجه': 'برمجة',
+                'برمجة': 'برمجة',
+                'العاب': 'ألعاب',
+                'ألعاب': 'ألعاب',
+                'موسيقي': 'موسيقى',
+                'موسيقى': 'موسيقى',
+                'تعليم': 'تعليم',
+                'رياضه': 'رياضة',
+                'رياضة': 'رياضة'
+            };
+            
+            return corrections[query] || query;
+        }
+
+        // معاينة صورة المصغرة
+        function handleThumbnailPreview(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('upload-preview').innerHTML = `<img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover;">`;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // رفع فيديو
+        function uploadVideo() {
+            if (!currentUser) {
+                showNotification(isEnglish ? 'Please sign in to upload videos' : 'يرجى تسجيل الدخول لرفع الفيديوهات', 'error');
+                return;
+            }
+            
+            const title = document.getElementById('video-title').value;
+            const description = document.getElementById('video-description').value;
+            const category = document.getElementById('video-category').value;
+            const thumbnailFile = document.getElementById('video-thumbnail').files[0];
+            const videoFile = document.getElementById('video-file').files[0];
+            const tags = document.getElementById('video-tags').value;
+            const visibility = document.getElementById('video-visibility').value;
+            
+            if (!title || !description || !category || !thumbnailFile || !videoFile) {
+                showNotification(isEnglish ? 'Please fill all fields' : 'يرجى ملء جميع الحقول', 'error');
+                return;
+            }
+            
+            // محاكاة الرفع
+            showNotification(isEnglish ? 'Uploading video...' : 'جاري رفع الفيديو...');
+            
+            // إنشاء كائن الفيديو الجديد
+            const newVideo = {
+                id: Date.now(), // استخدام الطابع الزمني كمعرف فريد
+                title: title,
+                channel: userChannel.name,
+                views: "0",
+                date: isEnglish ? "Now" : "الآن",
+                duration: "0:00",
+                category: category,
+                thumbnail: URL.createObjectURL(thumbnailFile),
+                videoSrc: URL.createObjectURL(videoFile),
+                likes: 0,
+                dislikes: 0,
+                comments: [],
+                tags: tags.split(',').map(tag => tag.trim()),
+                visibility: visibility
+            };
+            
+            // إضافة الفيديو إلى قائمة فيديوهات المستخدم
+            userVideos.unshift(newVideo); // إضافة في البداية لعرضها أولاً
+            localStorage.setItem('userVideos', JSON.stringify(userVideos));
+            
+            setTimeout(() => {
+                showNotification(isEnglish ? 'Video uploaded successfully' : 'تم رفع الفيديو بنجاح', 'success');
+                
+                // مسح الحقول
+                document.getElementById('video-title').value = '';
+                document.getElementById('video-description').value = '';
+                document.getElementById('video-thumbnail').value = '';
+                document.getElementById('video-file').value = '';
+                document.getElementById('video-tags').value = '';
+                document.getElementById('upload-preview').innerHTML = '<i class="fas fa-cloud-upload-alt" style="font-size: 3rem;"></i><p>' + (isEnglish ? 'Click to upload video or drag and drop file here' : 'انقر لتحميل فيديو أو اسحب وأفلت الملف هنا') + '</p>';
+                
+                // العودة إلى الصفحة الرئيسية وعرض الفيديو الجديد
+                showPage('home');
+                renderVideos();
+                updateChannelInfo();
+            }, 2000);
+        }
+
+        // تشغيل الفيديو
+        function playVideo(video) {
+            currentVideo = video;
+			
+            // حفظ في سجل المشاهدة
+            if (!watchHistory.some(v => v.id === video.id)) {
+                watchHistory.unshift(video);
+                localStorage.setItem('watchHistory', JSON.stringify(watchHistory));
+            }
+            
+            // تحديث واجهة المشغل
+            document.getElementById('video-player').style.display = 'flex';
+            document.getElementById('main-video').src = video.videoSrc;
+            document.getElementById('player-title').textContent = video.title;
+            document.getElementById('player-views').textContent = `${video.views} ${isEnglish ? translations.en.views : translations.ar.views}`;
+            document.getElementById('player-date').textContent = video.date;
+            document.getElementById('like-count').textContent = formatNumber(video.likes);
+            document.getElementById('comments-count').textContent = video.comments.length;
+            
+            // تحديث حالة الإعجاب
+            const isLiked = likedVideos.includes(video.id);
+            document.getElementById('like-btn').classList.toggle('active', isLiked);
+            
+            // تحديث حالة الحفظ
+            const isSaved = savedVideos.some(v => v.id === video.id);
+            document.getElementById('save-btn').classList.toggle('active', isSaved);
+            document.getElementById('save-btn').querySelector('span').textContent = isSaved ? (isEnglish ? 'Saved' : 'تم الحفظ') : (isEnglish ? 'Save' : 'حفظ');
+            
+            // عرض التعليقات
+            renderComments(video.comments);
+        }
+
+        // عرض التعليقات
+        function renderComments(comments) {
+            const commentsContainer = document.getElementById('comments-container');
+            commentsContainer.innerHTML = '';
+            
+            if (comments.length === 0) {
+                commentsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-comments" style="font-size: 2rem; margin-bottom: 1rem; color: #aaa;"></i>
+                        <p>${isEnglish ? 'No comments yet. Be the first to comment!' : 'لا توجد تعليقات بعد. كن أول من يعلق!'}</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            comments.forEach(comment => {
+                const commentElement = document.createElement('div');
+                commentElement.className = 'comment';
+                commentElement.innerHTML = `
+                    <div class="comment-avatar">
+                        <div class="channel-icon">${comment.avatar}</div>
+                    </div>
+                    <div class="comment-content">
+                        <h4>${comment.name} <span>• ${comment.time}</span></h4>
+                        <p>${comment.text}</p>
+                    </div>
+                `;
+                commentsContainer.appendChild(commentElement);
+            });
+        }
+
+        // الإعجاب بالفيديو
+        function toggleLike() {
+            if (!currentUser) {
+                showNotification(isEnglish ? 'Please sign in to like videos' : 'يرجى تسجيل الدخول للإعجاب بالفيديوهات', 'error');
+                return;
+            }
+            
+            if (!currentVideo) return;
+            
+            const index = likedVideos.indexOf(currentVideo.id);
+            const likeBtn = document.getElementById('like-btn');
+            
+            if (index === -1) {
+                // إضافة الإعجاب
+                likedVideos.push(currentVideo.id);
+                likeBtn.classList.add('active');
+                currentVideo.likes++;
+                showNotification(isEnglish ? 'Liked video' : 'تم الإعجاب بالفيديو');
+            } else {
+                // إزالة الإعجاب
+                likedVideos.splice(index, 1);
+                likeBtn.classList.remove('active');
+                currentVideo.likes--;
+                showNotification(isEnglish ? 'Removed like from video' : 'تم إزالة الإعجاب بالفيديو');
+            }
+            
+            document.getElementById('like-count').textContent = formatNumber(currentVideo.likes);
+            localStorage.setItem('likedVideos', JSON.stringify(likedVideos));
+            
+            // تحديث الفيديو في القائمة
+            const videoIndex = userVideos.findIndex(v => v.id === currentVideo.id);
+            if (videoIndex !== -1) {
+                userVideos[videoIndex].likes = currentVideo.likes;
+                localStorage.setItem('userVideos', JSON.stringify(userVideos));
+            }
+        }
+
+        // حفظ الفيديو
+        function toggleSave() {
+            if (!currentUser) {
+                showNotification(isEnglish ? 'Please sign in to save videos' : 'يرجى تسجيل الدخول لحفظ الفيديوهات', 'error');
+                return;
+            }
+            
+            if (!currentVideo) return;
+            
+            const index = savedVideos.findIndex(v => v.id === currentVideo.id);
+            const saveBtn = document.getElementById('save-btn');
+            
+            if (index === -1) {
+                // حفظ الفيديو
+                savedVideos.push(currentVideo);
+                saveBtn.classList.add('active');
+                saveBtn.querySelector('span').textContent = isEnglish ? 'Saved' : 'تم الحفظ';
+                showNotification(isEnglish ? 'Video saved to watch later' : 'تم حفظ الفيديو في قائمة المشاهدة لاحقاً');
+            } else {
+                // إزالة الحفظ
+                savedVideos.splice(index, 1);
+                saveBtn.classList.remove('active');
+                saveBtn.querySelector('span').textContent = isEnglish ? 'Save' : 'حفظ';
+                showNotification(isEnglish ? 'Video removed from watch later' : 'تم إزالة الفيديو من قائمة المشاهدة لاحقاً');
+            }
+            
+            localStorage.setItem('savedVideos', JSON.stringify(savedVideos));
+        }
+
+        // مشاركة الفيديو
+        function shareVideo() {
+            if (!currentVideo) return;
+            
+            // محاكاة المشاركة
+            const shareUrl = `https://micro.com/video/${currentVideo.id}`;
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                showNotification(isEnglish ? 'Video link copied to clipboard' : 'تم نسخ رابط الفيديو إلى الحافظة');
+            });
+        }
+
+        // تعديل الفيديو
+        function editVideo(videoId) {
+            const video = userVideos.find(v => v.id === videoId);
+            if (!video) return;
+            
+            // في تطبيق حقيقي، هنا سيتم فتح نموذج التعديل
+            showNotification(isEnglish ? 'Edit video feature coming soon' : 'ميزة تعديل الفيديو قريباً', 'info');
+        }
+
+        // حذف الفيديو
+        function deleteVideo(videoId) {
+            if (confirm(isEnglish ? 'Are you sure you want to delete this video?' : 'هل أنت متأكد من أنك تريد حذف هذا الفيديو؟')) {
+                const index = userVideos.findIndex(v => v.id === videoId);
+                if (index !== -1) {
+                    userVideos.splice(index, 1);
+                    localStorage.setItem('userVideos', JSON.stringify(userVideos));
+                    renderManageVideos();
+                    renderChannelVideos();
+                    updateChannelInfo();
+                    showNotification(isEnglish ? 'Video deleted successfully' : 'تم حذف الفيديو بنجاح', 'success');
+                    
+                    // إذا كان الفيديو المحذوف هو المعروض حالياً، أغلق المشغل
+                    if (currentVideo && currentVideo.id === videoId) {
+                        closeVideoPlayer();
+                    }
+                }
+            }
+        }
+
+        // عرض الفيديوهات
+        function renderVideos(filterCategory = 'all') {
+            const videoGrid = document.getElementById('video-grid');
+            videoGrid.innerHTML = '';
+            
+            const filteredVideos = filterCategory === 'all' 
+                ? userVideos 
+                : userVideos.filter(video => video.category === filterCategory);
+            
+            if (filteredVideos.length === 0) {
+                videoGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-video" style="font-size: 3rem; margin-bottom: 1rem; color: #aaa;"></i>
+                        <h3>${isEnglish ? translations.en.noVideos : translations.ar.noVideos}</h3>
+                        <p>${isEnglish ? translations.en.beFirst : translations.ar.beFirst}</p>
+                        <button class="btn btn-primary" id="first-upload-btn">${isEnglish ? translations.en.upload : translations.ar.upload}</button>
+                    </div>
+                `;
+                document.getElementById('first-upload-btn').addEventListener('click', () => showPage('upload'));
+                return;
+            }
+            
+            filteredVideos.forEach(video => {
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card';
+                videoCard.setAttribute('data-video-id', video.id);
+                
+                videoCard.innerHTML = `
+                    <div class="thumbnail">
+                        <img src="${video.thumbnail}" alt="${video.title}">
+                        <div class="video-duration">${video.duration}</div>
+                    </div>
+                    <div class="video-info">
+                        <div class="channel-icon">${video.channel.charAt(0)}</div>
+                        <div class="video-details">
+                            <h3>${video.title}</h3>
+                            <div class="video-meta">
+                                <span>${video.channel}</span>
+                                <span>• ${video.views} ${isEnglish ? translations.en.views : translations.ar.views} • ${video.date}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                videoCard.addEventListener('click', () => playVideo(video));
+                videoGrid.appendChild(videoCard);
+            });
+        }
+
+        // تصفية الفيديوهات حسب الفئة
+        function filterVideos(category) {
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.category-btn[data-category="${category}"]`).classList.add('active');
+            renderVideos(category);
+        }
+
+        // تنسيق الأرقام (مثل 1.2K)
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num;
+        }
+
+        // عرض الإشعارات
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification';
+            
+            if (type === 'error') {
+                notification.classList.add('error');
+            } else if (type === 'warning') {
+                notification.classList.add('warning');
+            }
+            
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // إغلاق النوافذ عند النقر خارجها
+        window.addEventListener('click', (e) => {
+            if (e.target === document.getElementById('video-player')) {
+                closeVideoPlayer();
+            }
+            if (e.target === document.getElementById('auth-modal')) {
+                closeAuthModal();
+            }
+        });
+
+        // جعل السحب والإفلات يعمل لرفع الفيديوهات
+        const uploadPreview = document.getElementById('upload-preview');
+        if (uploadPreview) {
+            uploadPreview.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadPreview.style.border = '2px dashed #3ea6ff';
+            });
+
+            uploadPreview.addEventListener('dragleave', () => {
+                uploadPreview.style.border = 'none';
+            });
+
+            uploadPreview.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadPreview.style.border = 'none';
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    const videoFile = document.getElementById('video-file');
+                    videoFile.files = files;
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        uploadPreview.innerHTML = `<video src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover;"></video>`;
+                    };
+                    reader.readAsDataURL(files[0]);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
